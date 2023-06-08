@@ -1,5 +1,5 @@
 # multistateRC-py
-Multi-state classification of time-dependent signals using a trainable reservoir computing approach.
+Multi-state classification of time-dependent signals using a trainable reservoir computing approach. \
 Implemented in Python.
 
 ***Note that this project is under active development.***
