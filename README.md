@@ -14,3 +14,7 @@ Implemented in Python.
 - [ ] Functionality for general training and testing data set sizes
 - [ ] Visualization tools: confusion matrix?
 - [ ] Examples
+
+## Resources
+
+- Article:
