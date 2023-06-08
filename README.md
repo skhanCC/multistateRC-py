@@ -4,4 +4,7 @@ Implemented in Python.
 
 Main features:
 - Fast optimization of filters for general multi-state time signals of arbitrary dimension and length
-- Analytically-determined optimal filters for special noise statistics (White noise)
+
+
+
+- Analytically-determined optimal filters for special noise statistics (white noise)
