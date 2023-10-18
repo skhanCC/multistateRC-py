@@ -10,7 +10,7 @@ Implemented in Python.
 
 ## Roadmap
 
-- [ ] Function for analytic filters
+- [.] Function for analytic filters
 - [ ] Functionality for general training and testing data set sizes
 - [ ] Visualization tools: confusion matrix?
 - [ ] Examples
