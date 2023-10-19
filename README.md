@@ -2,6 +2,8 @@
 Multi-state classification of time-dependent signals using a trainable reservoir computing approach. \
 Implemented in Python.
 
+Datasets are available at: https://drive.google.com/drive/folders/1d1uzs42fv0epFfoDZpYfwJ1-knBSObl4?usp=sharing
+
 ***Note that this project is under active development.***
 
 ## Features
