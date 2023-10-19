@@ -12,10 +12,10 @@ Datasets are available at: https://drive.google.com/drive/folders/1d1uzs42fv0epF
 
 ## Roadmap
 
-- [ ] Function for analytic filters
+- [x] Function for analytic filters
 - [ ] Functionality for general training and testing data set sizes
 - [ ] Visualization tools: confusion matrix?
-- [ ] Examples
+- [x] Examples
 
 ## Resources
 
