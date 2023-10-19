@@ -2,7 +2,7 @@
 Multi-state classification of time-dependent signals using a trainable reservoir computing approach. \
 Implemented in Python.
 
-Datasets are available at: https://drive.google.com/drive/folders/1d1uzs42fv0epFfoDZpYfwJ1-knBSObl4?usp=sharing
+Datasets are available for download at: https://drive.google.com/drive/folders/1d1uzs42fv0epFfoDZpYfwJ1-knBSObl4?usp=sharing
 
 ***Note that this project is under active development.***
 
@@ -12,10 +12,10 @@ Datasets are available at: https://drive.google.com/drive/folders/1d1uzs42fv0epF
 
 ## Roadmap
 
-- [x] Function for analytic filters
+- [X] Function for analytic filters
 - [ ] Functionality for general training and testing data set sizes
 - [ ] Visualization tools: confusion matrix?
-- [x] Examples
+- [X] Examples
 
 ## Resources
 
