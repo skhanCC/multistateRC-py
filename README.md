@@ -20,4 +20,4 @@ Datasets are available for download at: https://drive.google.com/drive/folders/1
 
 ## Resources
 
-- Article:
+- Article: https://arxiv.org/abs/2310.18519
