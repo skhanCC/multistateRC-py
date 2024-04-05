@@ -16,7 +16,6 @@ Datasets are available for download at: https://drive.google.com/drive/folders/1
 - [X] Visualization tools: filter comparisons
 - [X] Examples
 - [ ] Visualization tools: confusion matrix
-- [ ] Functionality for general training and testing data set sizes
 
 ## Resources
 
