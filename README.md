@@ -8,7 +8,7 @@ Datasets are available for download at: https://drive.google.com/drive/folders/1
 
 ## Features
 - Fast optimization of filters for general multi-state time signals of arbitrary dimension and length
-- Semi-analytically-determined optimal filters for special noise statistics (white noise)
+- Semi-analytically-determined optimal filters for arbitrary noise statistics
 
 ## Roadmap
 
