@@ -21,9 +21,15 @@ def calcMultiStateWO(dataMat, NTrain, rP=0.0):
     for q in range(C):
         for d in range(D):
             if d == 0:
-                QM = np.hstack( (dataMat[q,:,d,:],np.ones((NTraj,1))) )
+                if d == D-1:
+                    QM = np.hstack( (dataMat[q,:,d,:],np.ones((NTraj,1))) )
+                else:
+                    QM = dataMat[q,:,d,:]
             else:
-                QM = np.hstack( (QM,np.hstack( (dataMat[q,:,d,:],np.ones((NTraj,1))) )) )
+                if d == D-1:
+                    QM = np.hstack( (QM,np.hstack( (dataMat[q,:,d,:],np.ones((NTraj,1))) )) )
+                else:
+                    QM = np.hstack( (QM,dataMat[q,:,d,:]) )
 
         if q == 0:
             features_train = QM
@@ -74,9 +80,10 @@ def calcMultiStateWO(dataMat, NTrain, rP=0.0):
             
                 
     return WOb
+    
 
 # Function to return semi-analytic matched filters in the general noise case
-# for the classification of an arbitrary number of states
+# for the classification of an arbitrary number of states. White noise case if wn=1.
 def calcMultiStateMF(dataMat, wn=0):
     
     # Extract data properties from data matrix
@@ -318,7 +325,6 @@ def testMultiStateWO(WOb, dataMat, NTrain, NTest):
     return np.mean(classVecTR), np.mean(classVecTE)
 
 
-
 # Function to test trained weights for the classification of an arbitrary number of states
 def testMultiStateRC(dataMat, NTrain, NTest, rctype='gen'):
     
@@ -329,11 +335,13 @@ def testMultiStateRC(dataMat, NTrain, NTest, rctype='gen'):
     NT    = np.shape(dataMat)[3]
     
     # Determine RC weights
-    assert rctype == 'gen' or rctype == 'wn', f"rctype must be 'gen' or 'wn', got '{rctype}' instead!"
-    if rctype == 'gen': # General case
+    assert rctype == 'gen' or rctype == 'genA' or rctype == 'wn', f"rctype must be 'gen', 'genA', or 'wn', got '{rctype}' instead!"
+    if rctype == 'gen': # General case using numerics
         WOb = calcMultiStateWO(dataMat, NTrain, rP=0.0)
+    if rctype == 'genA': # General case using analytics
+        WOb, _, _, _ = calcMultiStateMF(dataMat, wn=0)
     if rctype == 'wn': # White noise case
-        WOb, _, _, _ = calcMultiStateMF(dataMat)
+        WOb, _, _, _ = calcMultiStateMF(dataMat, wn=1)
     
     
 ################################# Compiled Matrices ################################
@@ -342,14 +350,33 @@ def testMultiStateRC(dataMat, NTrain, NTest, rctype='gen'):
     for q in range(C):
         for d in range(D):
             if d == 0:
-                QM = np.hstack( (dataMat[q,:,d,:],np.ones((NTraj,1))) )
+                if d == D-1:
+                    QM = np.hstack( (dataMat[q,:,d,:],np.ones((NTraj,1))) )
+                else:
+                    QM = dataMat[q,:,d,:]
             else:
-                QM = np.hstack( (QM,np.hstack( (dataMat[q,:,d,:],np.ones((NTraj,1))) )) )
+                if d == D-1:
+                    QM = np.hstack( (QM,np.hstack( (dataMat[q,:,d,:],np.ones((NTraj,1))) )) )
+                else:
+                    QM = np.hstack( (QM,dataMat[q,:,d,:]) )
 
         if q == 0:
             features_train = QM
         else:
             features_train = np.vstack( (features_train,QM) )
+    
+#     # Construct matrix of readout features
+#     for q in range(C):
+#         for d in range(D):
+#             if d == 0:
+#                 QM = np.hstack( (dataMat[q,:,d,:],np.ones((NTraj,1))) )
+#             else:
+#                 QM = np.hstack( (QM,np.hstack( (dataMat[q,:,d,:],np.ones((NTraj,1))) )) )
+
+#         if q == 0:
+#             features_train = QM
+#         else:
+#             features_train = np.vstack( (features_train,QM) )
 
     # Feature matrix in original basis
     X = np.real( features_train ) 
@@ -413,7 +440,7 @@ def testMultiStateRC(dataMat, NTrain, NTest, rctype='gen'):
 #####################################################################################
 
 # Function to compute RC weights as filters and visualize them
-def visFilters(dataMat, NTrain, NTest, dt):
+def visFilters(dataMat, NTrain, NTest, dt=0.01):
     
     # Extract data properties from data matrix
     C     = np.shape(dataMat)[0]
@@ -422,13 +449,14 @@ def visFilters(dataMat, NTrain, NTest, dt):
     NT    = np.shape(dataMat)[3]
     
     # Determine RC weights for both general case and white noise case
-    # General case
+    # General case using numerics
     WOb = calcMultiStateWO(dataMat, NTrain, rP=0.0)
+    # General case using analytics
+    WOA, _, _, _ = calcMultiStateMF(dataMat, wn=0)
     # White noise case
-    WOA, _, _, _ = calcMultiStateMF(dataMat)
+    WOw, _, _, _ = calcMultiStateMF(dataMat, wn=1)
     
     # Time vector using sampling time
-    dt = 0.01
     T = np.arange(0,NT*dt,dt)
 
     fig, axs = plt.subplots(M, C, figsize=(4*C,4*M))
@@ -437,8 +465,9 @@ def visFilters(dataMat, NTrain, NTest, dt):
     for m in range(M):
         for k in range(C):
             ax = axs[m,k]
-            ax.plot(T, WOA[m*(NT+1):(m+1)*(NT+1)-1,k]/la.norm(WOA[m*(NT+1):(m+1)*(NT+1)-1,k]), 'k')
-            ax.plot(T, WOb[m*(NT+1):(m+1)*(NT+1)-1,k]/la.norm(WOb[m*(NT+1):(m+1)*(NT+1)-1,k]), 'gray', zorder=-3)
+            ax.plot(T, WOw[m*(NT):(m+1)*(NT),k]/la.norm(WOw[m*(NT):(m+1)*(NT),k]), 'k')
+            ax.plot(T, WOA[m*(NT):(m+1)*(NT),k]/la.norm(WOA[m*(NT):(m+1)*(NT),k]), '--C3', alpha=0.5)
+            ax.plot(T, WOb[m*(NT):(m+1)*(NT),k]/la.norm(WOb[m*(NT):(m+1)*(NT),k]), 'gray', zorder=-3)
             ax.set_title('m = ' + str(m) + ', k = ' + str(k))
             
     plt.show()
